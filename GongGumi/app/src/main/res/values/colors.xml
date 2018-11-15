@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#4c66eb</color> <!-- 툴바 색상 -->
+    <color name="colorPrimaryDark">#3252f4</color> <!-- 상태바 색상 -->
+    <color name="colorAccent">#22418f</color> <!-- fab 아이템 색상 -->
+    <color name="colorWhite">#ffffff</color> <!-- 흰색  색상 -->
+</resources>
