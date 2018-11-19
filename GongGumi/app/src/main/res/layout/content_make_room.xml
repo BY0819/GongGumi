@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context=".MakeRoomActivity"
+    tools:context=".Activity.MakeRoomActivity"
     tools:showIn="@layout/activity_make_room">
 
     <TextView
@@ -24,6 +24,22 @@
         app:layout_constraintStart_toEndOf="@+id/imageView4"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/txt_leaderName"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="방장 이름"
+        android:textColor="#22418f"
+        android:textSize="16sp"
+        android:textStyle="normal"
+        android:typeface="sans"
+        app:layout_constraintStart_toEndOf="@+id/imageView"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_roomname" />
+
     <EditText
         android:id="@+id/etxt_roomname"
         android:layout_width="wrap_content"
@@ -34,6 +50,17 @@
         android:inputType="textPersonName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_roomname" />
+
+    <EditText
+        android:id="@+id/etxt_leadername"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txt_leaderName" />
 
     <TextView
         android:id="@+id/txt_price_one"
@@ -49,7 +76,7 @@
         android:textStyle="normal"
         android:typeface="sans"
         app:layout_constraintStart_toEndOf="@+id/imageView5"
-        app:layout_constraintTop_toBottomOf="@+id/etxt_roomname" />
+        app:layout_constraintTop_toBottomOf="@+id/etxt_leadername" />
 
     <EditText
         android:id="@+id/etxt_price_one"
@@ -154,7 +181,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etxt_roomname"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_leadername"
         app:srcCompat="@drawable/p_money" />
 
     <ImageView
@@ -177,6 +204,17 @@
         android:layout_marginTop="24dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etxt_price_other"
+        app:srcCompat="@drawable/group" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/etxt_roomname"
         app:srcCompat="@drawable/group" />
 
 </android.support.constraint.ConstraintLayout>

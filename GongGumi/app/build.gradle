@@ -29,7 +29,7 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.4.0'
 
-    compile group : 'cz.msebera.android' , name: 'httpclient' , version: '4.4.1.2'
+    compile group: 'cz.msebera.android', name: 'httpclient', version: '4.4.1.2'
 
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile 'com.google.code.gson:gson:2.8.0'

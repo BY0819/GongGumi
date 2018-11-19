@@ -1,12 +1,11 @@
 package com.example.vmfld.gonggumi.interfaces;
 
-import com.example.vmfld.gonggumi.UserUuid;
-import com.example.vmfld.gonggumi.UserUuidData;
+import com.example.vmfld.gonggumi.UserData;
+
 
 import java.util.HashMap;
 
 import retrofit2.Call;
-import retrofit2.http.Field;
 import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.POST;
@@ -17,5 +16,5 @@ public interface UserIdApi {
 
     @FormUrlEncoded
     @POST("api/add/user")
-    Call<UserUuidData> postUserData (@FieldMap HashMap<String, String> param);
+    Call<UserData> postUserData (@FieldMap HashMap<String, String> param);
 }
