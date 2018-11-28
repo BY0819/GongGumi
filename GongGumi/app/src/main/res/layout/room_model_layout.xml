@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    android:background="@drawable/room1"
+    android:id="@+id/EnteredRoomLayout">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txtv_roomName"
+        android:text="5월 이탈리아 여행"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:font="@font/roboto_regular"
+        android:textColor="@color/colorWhite"
+        android:layout_centerInParent="true"
+        />
+
+    <TextView
+        android:id="@+id/txtv_regdate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/txtv_roomName"
+        android:layout_centerHorizontal="true"
+        android:text="2018-10-21"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:textColor="@color/colorWhite"
+        />
+
+    <TextView
+        android:id="@+id/txtv_leaderName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="13dp"
+        android:layout_marginBottom="2dp"
+        android:font="@font/roboto_regular"
+        android:text="최보윤"
+        android:textColor="@color/colorWhite"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
