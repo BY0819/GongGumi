@@ -32,8 +32,14 @@
             android:label="@string/title_activity_make_room"
             android:theme="@style/AppTheme.NoActionBar" />
 
+        <activity
+            android:name=".Activity.MakeRoomPopActivity"
+            android:theme="@style/AppTheme.Pop"
+            />
+
 
     </application>
+
 
 </manifest>
 

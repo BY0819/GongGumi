@@ -1,12 +1,9 @@
 package com.example.vmfld.gonggumi.storage;
 
-import android.app.SharedElementCallback;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.support.v4.content.ContextCompat;
 
-import com.example.vmfld.gonggumi.Datum;
-import com.example.vmfld.gonggumi.UserData;
+import com.example.vmfld.gonggumi.ApiData.Datum;
 
 public class SharedUserManager {
 

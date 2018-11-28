@@ -1,6 +1,6 @@
 package com.example.vmfld.gonggumi.interfaces;
 
-import com.example.vmfld.gonggumi.UserData;
+import com.example.vmfld.gonggumi.ApiData.UserData;
 
 
 import java.util.HashMap;
@@ -16,5 +16,5 @@ public interface UserIdApi {
 
     @FormUrlEncoded
     @POST("api/add/user")
-    Call<UserData> postUserData (@FieldMap HashMap<String, String> param);
+    Call<UserData> postUserData (@FieldMap HashMap<String , String> param);
 }

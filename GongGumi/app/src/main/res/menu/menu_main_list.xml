@@ -4,7 +4,7 @@
     tools:context="com.example.vmfld.gonggumi.Activity.MainListActivity">
     <item
         android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/search"
         android:orderInCategory="100"
         android:title="방 검색하기"
         app:showAsAction="ifRoom" />

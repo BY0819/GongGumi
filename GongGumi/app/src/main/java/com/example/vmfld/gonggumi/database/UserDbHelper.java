@@ -1,25 +1,32 @@
 package com.example.vmfld.gonggumi.database;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.SearchRecentSuggestionsProvider;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 public class UserDbHelper extends SQLiteOpenHelper {
-    private static  UserDbHelper sInstance;
+    private static  UserDbHelper sInstance ;
 
     public static final int DB_VERSION = 1;
     public static final  String DB_NAME = "User.db";
     public static final String SQL_CREATE_ENTRIES =
-            String .format("CREATE TABLE %S (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT)",
+            String .format("CREATE TABLE %S (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT)",
                     UserIdContract.UserIdEntry.TABLE_NAME,
                     UserIdContract.UserIdEntry._ID,
-                    UserIdContract.UserIdEntry.COLUMN_NAME_USER_ID,
-                    UserIdContract.UserIdEntry.COLUMN_NAME_USER_FLAG);
+                    UserIdContract.UserIdEntry.COLUMN_NAME_USER_ID);
 
     private static final String SQL_DELETE_ENTRIES =
-            "DROP TABLE IF EXISTS" + UserIdContract.UserIdEntry.TABLE_NAME;
+            "DROP TABLE IF EXISTS " + UserIdContract.UserIdEntry.TABLE_NAME;
 
+
+    public  static  UserDbHelper getsInstance(Context context){
+        if( sInstance  == null ){
+            sInstance = new UserDbHelper(context);
+        }
+        return sInstance;
+    }
 
     public UserDbHelper(Context context) {
         super(context, DB_NAME, null, DB_VERSION);

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GongGumi</string>
+    <string name="app_name">공그미</string>
     <string name="action_settings">Settings</string>
     <string name="title_activity_make_room">MakeRoomActivity</string>
 </resources>

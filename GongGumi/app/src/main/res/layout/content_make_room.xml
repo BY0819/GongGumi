@@ -80,12 +80,13 @@
 
     <EditText
         android:id="@+id/etxt_price_one"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_price_one" />
 
@@ -113,7 +114,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:ems="10"
-        android:inputType="textPersonName"
+        android:inputType="number"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txt_price_other" />
 
@@ -121,9 +122,11 @@
         android:id="@+id/txt_cnt_members"
         android:layout_width="wrap_content"
         android:layout_height="30dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
         android:layout_marginTop="24dp"
-        android:text="참가인원"
         android:gravity="center"
+        android:text="참가인원"
         android:textColor="#22418f"
         android:textSize="16sp"
         android:textStyle="normal"
@@ -138,7 +141,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="24dp"
-        android:background="@android:drawable/ic_menu_add"
+        android:background="@drawable/minus"
         app:layout_constraintStart_toEndOf="@+id/txt_cnt_members"
         app:layout_constraintTop_toBottomOf="@+id/etxt_price_other" />
 
@@ -147,7 +150,7 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="24dp"
-        android:background="@android:drawable/ic_menu_add"
+        android:background="@drawable/plus"
         app:layout_constraintStart_toEndOf="@+id/txt_num_mem"
         app:layout_constraintTop_toBottomOf="@+id/etxt_price_other" />
 
@@ -156,9 +159,12 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_marginTop="24dp"
-        android:background="@android:color/darker_gray"
+        android:background="#fafafa"
+        android:text="0"
         android:gravity = "center"
         android:textSize="18sp"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/btn_sub_mem"
         app:layout_constraintTop_toBottomOf="@+id/etxt_price_other" />
 
