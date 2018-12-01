@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.strictmode.NonSdkApiUsedViolation;
 import android.provider.Settings;
@@ -22,6 +23,8 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.example.vmfld.gonggumi.Adapter.EnteredRoomListAdapter;
 import com.example.vmfld.gonggumi.ApiData.Datum;
@@ -33,6 +36,8 @@ import com.example.vmfld.gonggumi.database.UserDbHelper;
 import com.example.vmfld.gonggumi.database.UserIdContract;
 import com.example.vmfld.gonggumi.interfaces.EnteredRoomApi;
 import com.example.vmfld.gonggumi.interfaces.UserIdApi;
+import com.miguelcatalan.materialsearchview.MaterialSearchView;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -59,6 +64,7 @@ public class MainListActivity extends AppCompatActivity  {
     Integer DbCount = null;
 
     ContentValues contentValues = new ContentValues();
+    MaterialSearchView materialSearchView;
 
     private ListView listViewEnteredRoom;
     private Activity activity;
@@ -70,6 +76,8 @@ public class MainListActivity extends AppCompatActivity  {
         Toolbar toolbar = (Toolbar) findViewById(R.id.main_list_toolbar);
         setSupportActionBar(toolbar); // 툴바 적용
         getSupportActionBar().setDisplayShowTitleEnabled(false); // 커스텀 타이틀 사용으로 실제 타이틀 삭제
+        // getSupportActionBar().setTitle("LIST");
+        //toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_make_room);
@@ -80,6 +88,13 @@ public class MainListActivity extends AppCompatActivity  {
                                                             , REQUEST_ROOM_FINISH); // activity 전환
             }
         });
+
+        /** Search View 제작 **/
+        //SearchView searchView = (SearchView) findViewById(R.id.search_view);
+        materialSearchView = (MaterialSearchView)findViewById(R.id.search_view);
+
+
+
 
         /** 내부 DB에 저장된 사용자ID가 NULL일 경우 사용자 ID 저장하기**/
 
@@ -230,7 +245,9 @@ public class MainListActivity extends AppCompatActivity  {
         @Override
         public boolean onCreateOptionsMenu (Menu menu){
             getMenuInflater().inflate(R.menu.menu_main_list, menu);
-            return super.onCreateOptionsMenu(menu);
+            MenuItem menuItem = menu.findItem(R.id.action_search);
+            materialSearchView.setMenuItem(menuItem);
+            return true;
         }
 
         @Override
@@ -241,13 +258,23 @@ public class MainListActivity extends AppCompatActivity  {
             int id = item.getItemId();
 
             //noinspection SimplifiableIfStatement
-            if (id == R.id.action_search) {
-                return true;
+           if (id == R.id.action_search) {
+               // SearchView searchView = (SearchView)findViewById(R.id.search_view);
+                //searchView.setVisibility(visible);
+
+               // TextView txt_title = (TextView) findViewById(R.id.main_list_toolbar_title);
+               // txt_title.setVisibility(View.GONE);
+
             } else if (id == R.id.fab_make_room) {
 
             }
 
+
+
+           /** SearchView  버튼 클릭했을 때 동작 **/
+
             return super.onOptionsItemSelected(item);
+
         }
 
         /** Cursor Adapter **/

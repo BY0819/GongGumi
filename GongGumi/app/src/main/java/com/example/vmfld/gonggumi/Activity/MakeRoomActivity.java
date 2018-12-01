@@ -54,13 +54,13 @@ public class MakeRoomActivity extends AppCompatActivity {
     EditText etxt_price_one;
     EditText etxt_price_other;
 
-    String roomname;
-    Integer joinppl;
-    String regdate;
-    Integer personalprice;
-    Integer carryoverprice;
+    String roomname = null;
+    Integer joinppl = null;
+    String regdate ;
+    Integer personalprice = null;
+    Integer carryoverprice = null;
     String deleteflag;
-    String leadername;
+    String leadername = null;
     Integer userid;
     Integer secretcode;
 
@@ -116,14 +116,21 @@ public class MakeRoomActivity extends AppCompatActivity {
             etxt_leadername = findViewById(R.id.etxt_leadername);
             etxt_price_one = findViewById(R.id.etxt_price_one);
             etxt_price_other = findViewById(R.id.etxt_price_other);
+            String temp_one = null;
+            String temp_other = null;
+
 
             /** 사용자 입력 정보 받아오기 **/
             roomname = etxt_roomname.getText().toString();
             leadername = etxt_leadername.getText().toString();
-            personalprice = Integer.parseInt(etxt_price_one.getText().toString().replaceAll(",", ""));
-            carryoverprice = Integer.parseInt(etxt_price_other.getText().toString().replaceAll(",", ""));
+            // personalprice = Integer.parseInt(etxt_price_one.getText().toString().replaceAll(",", ""));
+            //carryoverprice = Integer.parseInt(etxt_price_other.getText().toString().replaceAll(",", ""));
             joinppl = num_mem;
             deleteflag = "N";
+
+            temp_one = etxt_price_one.getText().toString();
+            temp_other = etxt_price_other.getText().toString();
+
 
             long now = System.currentTimeMillis();
             Date date = new Date(now);
@@ -132,58 +139,75 @@ public class MakeRoomActivity extends AppCompatActivity {
             //regdate = simpleDateFormat.parse(temp);
 
 
-            // 받아온 사용자 입력 정보 확인
 
-
-            /** Retrofit으로 Room정보 Post하기**/
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(MakeRoomApi.BaseUrl)
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
-
-            final MakeRoomApi makeRoomApi = retrofit.create(MakeRoomApi.class);
-
-            Log.e("현재 값2 : ", roomname+"//"+leadername+"//"+personalprice+"//"+carryoverprice+"//"
+            Log.e("현재 값2 : ", roomname+"//"+leadername+"//"+temp_one+"//"+temp_other+"//"
                     +joinppl+"//"+deleteflag+"//"+regdate+"//");
 
-            HashMap<String, Object> input = new HashMap<>();
-            input.put("roomname", roomname);
-            input.put("joinppl", joinppl);
-            input.put("regdate", regdate);
-            input.put("personalprice", personalprice);
-            input.put("carryoverprice", carryoverprice);
-            input.put("deleteflag", deleteflag);
-            input.put("name", leadername);
-            input.put("userid", userid);
+            // 사용자가 입력을 모두 했는지 확인
+            if(roomname.isEmpty() || leadername.isEmpty() || temp_one.isEmpty() || temp_other.isEmpty() )
+            {
+                Toast.makeText(MakeRoomActivity.this, "모든 정보를 입력해주세요", Toast.LENGTH_SHORT).show();
+            }
+            else
+            {
 
-            makeRoomApi.postUserData(input).enqueue(new Callback<MakeRoomData>() {
-                @Override
-                public void onResponse(Call<MakeRoomData> call, Response<MakeRoomData> response) {
-                    MakeRoomData makeRoomData =response.body();
+                personalprice = Integer.parseInt(temp_one.replaceAll(",", ""));
+                carryoverprice = Integer.parseInt(etxt_price_other.getText().toString().replaceAll(",", ""));
 
-                    if (response.isSuccessful()) {
 
-                        Log.e("통신 값 :", response.code() + "");
-                        Log.e("잘 들어왔나 확인 : ", makeRoomData.getRoomindex() + ""
-                                                                                        +makeRoomData.getSecuritycode()+"");
-                        secretcode = makeRoomData.getSecuritycode();
+                /** Retrofit으로 Room정보 Post하기**/
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(MakeRoomApi.BaseUrl)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
 
-                        Intent intent = new Intent(MakeRoomActivity.this, MakeRoomPopActivity.class);
+                final MakeRoomApi makeRoomApi = retrofit.create(MakeRoomApi.class);
 
-                        intent.putExtra("p_secretcode", secretcode);
-                        startActivityForResult(intent, REQUEST_CODE_FINISH);
+                Log.e("현재 값2 : ", roomname+"//"+leadername+"//"+personalprice+"//"+carryoverprice+"//"
+                        +joinppl+"//"+deleteflag+"//"+regdate+"//");
 
-                        //startActivity(new Intent(MakeRoomActivity.this,  MakeRoomPopActivity.class) );
-                    } else {
-                        Log.e("데이터 통신 실패 :", response.code() + "");
+                HashMap<String, Object> input = new HashMap<>();
+                input.put("roomname", roomname);
+                input.put("joinppl", joinppl);
+                input.put("regdate", regdate);
+                input.put("personalprice", personalprice);
+                input.put("carryoverprice", carryoverprice);
+                input.put("deleteflag", deleteflag);
+                input.put("name", leadername);
+                input.put("userid", userid);
+
+                makeRoomApi.postUserData(input).enqueue(new Callback<MakeRoomData>() {
+                    @Override
+                    public void onResponse(Call<MakeRoomData> call, Response<MakeRoomData> response) {
+                        MakeRoomData makeRoomData =response.body();
+
+                        if (response.isSuccessful()) {
+
+                            Log.e("통신 값 :", response.code() + "");
+                            Log.e("잘 들어왔나 확인 : ", makeRoomData.getRoomindex() + ""
+                                    +makeRoomData.getSecuritycode()+"");
+                            secretcode = makeRoomData.getSecuritycode();
+
+                            Intent intent = new Intent(MakeRoomActivity.this, MakeRoomPopActivity.class);
+
+                            intent.putExtra("p_secretcode", secretcode);
+                            startActivityForResult(intent, REQUEST_CODE_FINISH);
+
+                            //startActivity(new Intent(MakeRoomActivity.this,  MakeRoomPopActivity.class) );
+                        } else {
+                            Log.e("데이터 통신 실패 :", response.code() + "");
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<MakeRoomData> call, Throwable t) {
-                    Log.e("에러 발생 : ", t.getMessage());
-                }
-            });
+                    @Override
+                    public void onFailure(Call<MakeRoomData> call, Throwable t) {
+                        Log.e("에러 발생 : ", t.getMessage());
+                    }
+                });
+            }
+
+
+
 
         }
     };
