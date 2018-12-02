@@ -1,5 +1,7 @@
 package com.example.vmfld.gonggumi.Activity;
 
+import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -63,6 +65,9 @@ public class MakeRoomActivity extends AppCompatActivity {
     String leadername = null;
     Integer userid;
     Integer secretcode;
+
+    ContentValues contentValues = new ContentValues();
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +145,7 @@ public class MakeRoomActivity extends AppCompatActivity {
 
 
 
-            Log.e("현재 값2 : ", roomname+"//"+leadername+"//"+temp_one+"//"+temp_other+"//"
+            Log.e("MakeRoom 입력 값 확인  : ", roomname+"//"+leadername+"//"+temp_one+"//"+temp_other+"//"
                     +joinppl+"//"+deleteflag+"//"+regdate+"//");
 
             // 사용자가 입력을 모두 했는지 확인
@@ -163,7 +168,7 @@ public class MakeRoomActivity extends AppCompatActivity {
 
                 final MakeRoomApi makeRoomApi = retrofit.create(MakeRoomApi.class);
 
-                Log.e("현재 값2 : ", roomname+"//"+leadername+"//"+personalprice+"//"+carryoverprice+"//"
+                Log.e("입력 값 형식 변환 확인 : ", roomname+"//"+leadername+"//"+personalprice+"//"+carryoverprice+"//"
                         +joinppl+"//"+deleteflag+"//"+regdate+"//");
 
                 HashMap<String, Object> input = new HashMap<>();
@@ -184,8 +189,33 @@ public class MakeRoomActivity extends AppCompatActivity {
                         if (response.isSuccessful()) {
 
                             Log.e("통신 값 :", response.code() + "");
-                            Log.e("잘 들어왔나 확인 : ", makeRoomData.getRoomindex() + ""
-                                    +makeRoomData.getSecuritycode()+"");
+                            Log.e("잘 들어왔나 확인 : ", "방 번호 :" + makeRoomData.getRoomindex() + "//"
+                                    +"방 비밀번호 :" +makeRoomData.getSecuritycode()+"");
+
+                            /** Room번호와  Flag 저장 (Flag는 W)**/
+
+                            String temp_roomid = response.body().getRoomindex().toString();
+                            String temp_flag = "W";
+
+                            contentValues.put(UserIdContract.RoomDataEntry.COLUMN_NAME_ROOM_ID, temp_roomid);// Room id 저장
+                            contentValues.put(UserIdContract.RoomDataEntry.COLUMN_NAME_FLAG, temp_flag);// flag 저장
+
+
+                            SQLiteDatabase db = UserDbHelper.getsInstance(activity).getWritableDatabase();
+
+                            long newUserId = db.insert(UserIdContract.RoomDataEntry.TABLE_NAME,
+                                    null,
+                                    contentValues);
+
+                            if (newUserId == -1) {
+
+                                Log.e("저장에 문제가 발생하였습니다 : ", "");
+                            } else {
+
+                                Log.e("UserId 저장되었습니다 : ", "");
+                            }
+
+                             /**  보안코드 CUSTOM DIALOG 띄움**/
                             secretcode = makeRoomData.getSecuritycode();
 
                             Intent intent = new Intent(MakeRoomActivity.this, MakeRoomPopActivity.class);

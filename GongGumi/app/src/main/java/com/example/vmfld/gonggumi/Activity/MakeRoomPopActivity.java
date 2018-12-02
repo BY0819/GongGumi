@@ -16,11 +16,13 @@ import org.w3c.dom.Text;
 public class MakeRoomPopActivity extends Activity {
     Integer p_secretcode;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_makeroom_pop);
 
+        /** CUSTOM DIALOG 작성 **/
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 

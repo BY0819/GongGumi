@@ -23,23 +23,21 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity android:name=".Activity.MainListActivity"
-            android:theme="@style/AppTheme.NoActionBar" > </activity>
-
+        <activity
+            android:name=".Activity.MainListActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".Activity.MakeRoomActivity"
             android:label="@string/title_activity_make_room"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".Activity.MakeRoomPopActivity"
-            android:theme="@style/AppTheme.Pop"
-            />
-
+            android:theme="@style/AppTheme.Pop" />
+        <activity android:name=".Activity.SearchViewActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity android:name=".Activity.SearchRoomPopActivity"
+            android:theme="@style/AppTheme.Pop"></activity>
 
     </application>
 
-
 </manifest>
-

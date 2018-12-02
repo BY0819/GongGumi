@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -40,6 +41,7 @@ import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -62,12 +64,16 @@ public class MainListActivity extends AppCompatActivity  {
     String installDateString;
     Integer userIDInt = null;
     Integer DbCount = null;
+    ArrayList<Integer>  userRoomId = new ArrayList<Integer>();
+    ArrayList<String> userRoomFlag = new ArrayList<String>();
 
     ContentValues contentValues = new ContentValues();
+    UserDbHelper userDbHelper = UserDbHelper.getsInstance(this);
     MaterialSearchView materialSearchView;
 
     private ListView listViewEnteredRoom;
     private Activity activity;
+    private ImageView background_image;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +85,10 @@ public class MainListActivity extends AppCompatActivity  {
         // getSupportActionBar().setTitle("LIST");
         //toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
 
+        //배경 설정
+        background_image = (ImageView) findViewById(R.id.main_background);
+        background_image.setVisibility(View.GONE);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_make_room);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -89,16 +99,33 @@ public class MainListActivity extends AppCompatActivity  {
             }
         });
 
-        /** Search View 제작 **/
-        //SearchView searchView = (SearchView) findViewById(R.id.search_view);
+        /** Search 버튼 누르면 작동 * 확인 누르면 엑티비티 이동 **/
         materialSearchView = (MaterialSearchView)findViewById(R.id.search_view);
 
+        materialSearchView.setOnQueryTextListener(new MaterialSearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+
+                Intent intent = new Intent(MainListActivity.this, SearchViewActivity.class);
+
+                intent.putExtra("roomname", query);
+                startActivityForResult(intent, REQUEST_ROOM_FINISH);
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                //Do some magic
+                return false;
+            }
+        });
 
 
 
         /** 내부 DB에 저장된 사용자ID가 NULL일 경우 사용자 ID 저장하기**/
 
-        UserDbHelper userDbHelper = UserDbHelper.getsInstance(this);
+        //UserDbHelper userDbHelper = UserDbHelper.getsInstance(this);
 
         Cursor cursor = userDbHelper.getReadableDatabase()
                 .query(UserIdContract.UserIdEntry.TABLE_NAME,
@@ -114,6 +141,25 @@ public class MainListActivity extends AppCompatActivity  {
         //userIDInt = cursor.getInt(cursor.getColumnIndexOrThrow(UserIdContract.UserIdEntry.COLUMN_NAME_USER_ID));
 
         Log.e("DBCount 값 : ", DbCount+"");
+
+        /** 내부 DB에 저장된 ROOMID와 Flag 목록 보기**/
+        Cursor roomCusor = userDbHelper.getReadableDatabase()
+                .query(UserIdContract.RoomDataEntry.TABLE_NAME,
+                        null,null,null,null,null,null);
+
+        if(roomCusor != null && roomCusor.moveToFirst()){
+
+            for(int i = 0 ; i < roomCusor.getCount(); i++){
+                userRoomId.add( roomCusor.getInt(roomCusor.getColumnIndexOrThrow(UserIdContract.RoomDataEntry.COLUMN_NAME_ROOM_ID)));
+                userRoomFlag.add(roomCusor.getString(roomCusor.getColumnIndexOrThrow(UserIdContract.RoomDataEntry.COLUMN_NAME_FLAG)));
+                roomCusor.moveToNext();
+            }
+
+            // cursor.close();
+        }
+
+        Log.e("DB 저장된 Roomid : ", userRoomId + "");
+        Log.e("DB 저장된 RoomFlag : ",  userRoomFlag+ "");
 
         if (DbCount == 0) {
 
@@ -171,6 +217,8 @@ public class MainListActivity extends AppCompatActivity  {
 
                         userIDInt = datumList.get(0).getUserid();
 
+
+
                         /**  내부 DB에 USERID 저장하기 **/
 
                         contentValues.put(UserIdContract.UserIdEntry.COLUMN_NAME_USER_ID, userIDInt); // 저장
@@ -189,6 +237,8 @@ public class MainListActivity extends AppCompatActivity  {
                             Log.e("UserId 저장되었습니다 : ", "");
                         }
 
+                        //배경 visible 설정
+                        background_image.setVisibility(View.VISIBLE);
 
                     } else {
                         Log.e("데이터 통신 실패 :", response.code() + "");
@@ -200,6 +250,7 @@ public class MainListActivity extends AppCompatActivity  {
                     Log.e("에러 발생 : ", t.getMessage());
                 }
             });
+
 
         }
         /** 내부 DB에 저장된 사용자 ID가 들어있을 경우 통신하기**/
@@ -227,7 +278,7 @@ public class MainListActivity extends AppCompatActivity  {
 
                    Log.e("통신 값 :", response.code() + "");
                    Log.e("잘 들어왔나 확인 : ", enteredRoomListClassData.get(0).getRoomname() + "");
-
+                   background_image.setVisibility(View.GONE);
                    listViewEnteredRoom.setAdapter(new EnteredRoomListAdapter(getApplicationContext(), enteredRoomListClassData));
 
                }
@@ -235,6 +286,8 @@ public class MainListActivity extends AppCompatActivity  {
                @Override
                public void onFailure(Call<EnteredRoomData> call, Throwable t) {
                    Log.e("에러 발생2 : ", t.getMessage());
+                   //배경 visible 설정
+                   background_image.setVisibility(View.VISIBLE);
                }
            });
 
@@ -305,6 +358,26 @@ public class MainListActivity extends AppCompatActivity  {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode ==REQUEST_ROOM_FINISH  && resultCode == RESULT_OK){
 
+            /** 내부 DB에 저장된 ROOMID와 Flag 목록 보기**/
+            Cursor roomCusor = userDbHelper.getReadableDatabase()
+                    .query(UserIdContract.RoomDataEntry.TABLE_NAME,
+                            null,null,null,null,null,null);
+
+            if(roomCusor != null && roomCusor.moveToFirst()){
+
+                for(int i = 0 ; i < roomCusor.getCount(); i++){
+                    userRoomId.add( roomCusor.getInt(roomCusor.getColumnIndexOrThrow(UserIdContract.RoomDataEntry.COLUMN_NAME_ROOM_ID)));
+                    userRoomFlag.add(roomCusor.getString(roomCusor.getColumnIndexOrThrow(UserIdContract.RoomDataEntry.COLUMN_NAME_FLAG)));
+                    roomCusor.moveToNext();
+                }
+
+                // cursor.close();
+            }
+
+            Log.e("DB 저장된 Roomid : ", userRoomId + "");
+            Log.e("DB 저장된 RoomFlag : ",  userRoomFlag+ "");
+
+                /** 다시 통신 **/
             listViewEnteredRoom = (ListView) findViewById(R.id.my_room_list);
 
             Retrofit retrofit = new Retrofit.Builder()
@@ -323,8 +396,8 @@ public class MainListActivity extends AppCompatActivity  {
                     List<EnteredRoomListClassData> enteredRoomListClassData = response.body().data;
 
                     Log.e("통신 값 :", response.code() + "");
-                    Log.e("잘 들어왔나 확인 : ", enteredRoomListClassData.get(0).getRegdate() + "");
-
+                    Log.e("잘 들어왔나 확인 : ", enteredRoomListClassData.get(0).getRegdate() + "//"+response.body().getData().get(0).getName()+"");
+                    background_image.setVisibility(View.GONE);
                     listViewEnteredRoom.setAdapter(new EnteredRoomListAdapter(getApplicationContext(), enteredRoomListClassData));
 
                 }
@@ -332,6 +405,7 @@ public class MainListActivity extends AppCompatActivity  {
                 @Override
                 public void onFailure(Call<EnteredRoomData> call, Throwable t) {
                     Log.e("에러 발생2 : ", t.getMessage());
+                    background_image.setVisibility(View.GONE);
                 }
             });
         }

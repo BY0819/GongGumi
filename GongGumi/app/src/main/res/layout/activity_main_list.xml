@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activity.MainListActivity">
+    tools:context=".Activity.MainListActivity"
+    android:id="@+id/main_list_layout">
 
 
 
@@ -40,7 +41,14 @@
             >
         </com.miguelcatalan.materialsearchview.MaterialSearchView>
 
-
+    <ImageView
+        android:id="@+id/main_background"
+        android:layout_width="190dp"
+        android:layout_height="190dp"
+        android:layout_below="@id/main_list_toolbar"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="186dp"
+        android:src="@drawable/main_background" />
 
 
     <ListView
