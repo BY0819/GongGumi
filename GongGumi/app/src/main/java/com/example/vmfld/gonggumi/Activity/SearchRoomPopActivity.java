@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -15,13 +14,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.vmfld.gonggumi.ApiData.JoinRoomData;
-import com.example.vmfld.gonggumi.ApiData.SearchRoomData;
 import com.example.vmfld.gonggumi.R;
-import com.example.vmfld.gonggumi.database.RoomDataContract;
 import com.example.vmfld.gonggumi.database.UserDbHelper;
 import com.example.vmfld.gonggumi.database.UserIdContract;
 import com.example.vmfld.gonggumi.interfaces.JoinRoomApi;
-import com.example.vmfld.gonggumi.interfaces.MakeRoomApi;
 import com.example.vmfld.gonggumi.interfaces.SearchRoomApi;
 
 import java.util.HashMap;
@@ -31,7 +27,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.POST;
 
 public class SearchRoomPopActivity extends Activity {
 

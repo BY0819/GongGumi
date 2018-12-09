@@ -4,7 +4,7 @@ import android.provider.BaseColumns;
 
 public final class RoomDataContract {
 
-    private  RoomDataContract() {
+    private RoomDataContract() {
 
     }
 

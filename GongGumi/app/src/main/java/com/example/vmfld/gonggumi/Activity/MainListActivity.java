@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -59,21 +60,27 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class MainListActivity extends AppCompatActivity  {
 
     public static final int REQUEST_ROOM_FINISH = 2000;
+    public static final int REQUEST_MANAGE_FINISH = 3000;
 
     String userDeviceID;
     String installDateString;
     Integer userIDInt = null;
     Integer DbCount = null;
+    String roomName = null;
     ArrayList<Integer>  userRoomId = new ArrayList<Integer>();
     ArrayList<String> userRoomFlag = new ArrayList<String>();
+    ArrayList<String> roomNames = new ArrayList<>();
 
     ContentValues contentValues = new ContentValues();
     UserDbHelper userDbHelper = UserDbHelper.getsInstance(this);
     MaterialSearchView materialSearchView;
 
+    ListView my_room_list;
     private ListView listViewEnteredRoom;
     private Activity activity;
     private ImageView background_image;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +91,8 @@ public class MainListActivity extends AppCompatActivity  {
         getSupportActionBar().setDisplayShowTitleEnabled(false); // 커스텀 타이틀 사용으로 실제 타이틀 삭제
         // getSupportActionBar().setTitle("LIST");
         //toolbar.setTitleTextColor(Color.parseColor("#FFFFFF"));
+
+        my_room_list = (ListView) findViewById(R.id.my_room_list);
 
         //배경 설정
         background_image = (ImageView) findViewById(R.id.main_background);
@@ -292,6 +301,21 @@ public class MainListActivity extends AppCompatActivity  {
            });
 
         }
+
+
+        /** Room Click Listener 메인 리스트 -> 공금 관리창 **/
+        my_room_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Log.e("메인리스트 position: ", position+"");
+
+
+
+                Intent intent = new Intent(MainListActivity.this, RoomActivity.class);
+                intent.putExtra("position", position);
+                startActivityForResult(intent, REQUEST_MANAGE_FINISH );
+            }
+        });
 
     }
 

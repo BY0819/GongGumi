@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="150dp">
+
+    <ImageView
+        android:id="@+id/movieImage"
+        android:layout_width="100dp"
+        android:layout_height="150dp"
+        android:padding="8dp"
+        android:src="@drawable/list_circle" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/txt_list_date"
+        android:layout_alignStart="@+id/movieImage"
+        android:layout_alignLeft="@+id/movieImage"
+        android:layout_alignTop="@+id/movieImage"
+        android:layout_alignEnd="@+id/movieImage"
+        android:layout_alignRight="@+id/movieImage"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:gravity="center"
+        android:text="Name"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/background_light"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/txt_use_name1"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toRightOf="@id/movieImage"
+        android:gravity="bottom"
+        android:text="항목1" />
+
+    <TextView
+        android:id="@+id/txt_use_name2"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/movieImage"
+        android:layout_below="@id/txt_use_name1"
+        android:gravity="top"
+        android:text="항목2" />
+
+    <TextView
+        android:id="@+id/txt_use_price1"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="5dp"
+        android:layout_toRightOf="@id/txt_use_name1"
+        android:gravity="right|bottom"
+        android:text="가격1" />
+
+    <TextView
+        android:id="@+id/txt_use_price2"
+        android:layout_width="150dp"
+        android:layout_height="50dp"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@id/txt_use_name2"
+        android:layout_below="@id/txt_use_price1"
+        android:gravity="right|top"
+        android:text="가격2" />
+</RelativeLayout>

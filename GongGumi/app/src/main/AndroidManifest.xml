@@ -25,7 +25,7 @@
         </activity>
         <activity
             android:name=".Activity.MainListActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activity.MakeRoomActivity"
             android:label="@string/title_activity_make_room"
@@ -33,11 +33,18 @@
         <activity
             android:name=".Activity.MakeRoomPopActivity"
             android:theme="@style/AppTheme.Pop" />
-        <activity android:name=".Activity.SearchViewActivity"
+        <activity
+            android:name=".Activity.SearchViewActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.SearchRoomPopActivity"
+            android:theme="@style/AppTheme.Pop" />
+        <activity
+            android:name=".Activity.RoomActivity"
+            android:label="@string/title_activity_room"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Activity.SearchRoomPopActivity"
-            android:theme="@style/AppTheme.Pop"></activity>
-
+        <activity android:name=".Activity.CodeGetActivity"
+            android:theme="@style/AppTheme.Pop"/>
     </application>
 
 </manifest>
