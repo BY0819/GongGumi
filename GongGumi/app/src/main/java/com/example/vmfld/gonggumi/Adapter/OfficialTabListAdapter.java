@@ -6,30 +6,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.example.vmfld.gonggumi.ApiData.PublicInsertData;
 import com.example.vmfld.gonggumi.R;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
-public class OfficialTabListAdapter {
+import static android.view.View.GONE;
 
-    /*Integer[] ToolbarBackgrounds  = {R.drawable.roomt1, R.drawable.roomt2, R.drawable.roomt3, R.drawable.roomt4,
-                                                                  R.drawable.roomt5, R.drawable.roomt6, R.drawable.roomt7, R.drawable.roomt8,};
+public class OfficialTabListAdapter  extends  ArrayAdapter{
+
+
+    private DecimalFormat decimalFormat = new DecimalFormat("#,###");
 
     private Context context;
-    private List<OfficialTabData> officialTab;
-    private List<OfficialTabSumData> officialTabSum;
-    private List<OfficialTabDetailData> officialTabDetail;
+    private List<PublicInsertData> publicInsertData;
 
-
-
-    public OfficialTabListAdapter(Context context, List<OfficialTabData> officialTabData,
-                                  List<OfficialTabSumData> officialTabSumData, List<OfficialTabDetailData> officialTabDetailData) {
-        super(context, R.layout.list_model_layout, officialTabData);
+    public OfficialTabListAdapter(Context context, List<PublicInsertData> publicInsertData) {
+        super(context, R.layout.list_model_layout, publicInsertData);
         this.context = context;
-        this.officialTab = officialTabData;
-        this.officialTabSum = officialTabSumData;
-        this.officialTabDetail = officialTabDetailData;
+        this.publicInsertData = publicInsertData;
     }
 
     @Override
@@ -38,24 +36,36 @@ public class OfficialTabListAdapter {
         LayoutInflater layoutInflater = LayoutInflater.from(context);
         convertView = layoutInflater.inflate(R.layout.list_model_layout, parent, false);
 
-        OfficialTabData officialTabData = officialTab.get(position);
-        OfficialTabSumData officialTabSumData = officialTabSum.get(position);
-        OfficialTabDetailData officialTabDetailData = officialTabDetail.get(position);
+        TextView txt_list_date = (TextView) convertView.findViewById(R.id.txt_list_date);
+        txt_list_date.setText(publicInsertData.get(position).getDate());
 
-        int img_index = (int) (Math.random()*8);
-        int res = ToolbarBackgrounds[img_index];
+        TextView txt_use_name1 = (TextView) convertView.findViewById(R.id.txt_use_name1);
+        txt_use_name1.setText(publicInsertData.get(position).getMemo1());
 
-        LinearLayout toolbar_linearlayout = (LinearLayout)convertView.findViewById(R.id.toolbar_linearlayout);
-        toolbar_linearlayout.setBackgroundResource(res);
-
-
-        // List model만 적용시키는것임
-        // 지금 문제는 detail이 하나가 아니라는 부분.
-        // 이걸 해결하기 위해서 생각을 해보야함 
+        TextView txt_use_price1 = (TextView) convertView.findViewById(R.id.txt_use_price1);
+        Integer price1 = publicInsertData.get(position).getPrice1();
+        String temp_price1 =  decimalFormat.format(Double.parseDouble(price1.toString().replaceAll(",","")));
+        txt_list_date.setText(publicInsertData.get(position).getDate());
 
 
+        TextView txt_use_name2 = (TextView) convertView.findViewById(R.id.txt_use_name2);
+        if(publicInsertData.get(position).getMemo2().isEmpty()){
+            txt_use_name2.setVisibility(GONE);
+        }
+        txt_use_name2.setText(publicInsertData.get(position).getMemo2());
+
+        TextView txt_use_price2 = (TextView) convertView.findViewById(R.id.txt_use_price2);
+        if(publicInsertData.get(position).getPrice2().toString().isEmpty()){
+            txt_use_price2.setVisibility(GONE);
+        }
+        else{
+            Integer price2 = publicInsertData.get(position).getPrice2();
+            String temp_price2 =  decimalFormat.format(Double.parseDouble(price2.toString().replaceAll(",","")));
+            txt_list_date.setText(publicInsertData.get(position).getDate());
+        }
 
 
         return convertView;
-    }*/
+    }
+
 }

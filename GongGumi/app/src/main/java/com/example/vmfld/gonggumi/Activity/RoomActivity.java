@@ -1,11 +1,18 @@
 package com.example.vmfld.gonggumi.Activity;
 
+import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
@@ -18,20 +25,27 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.vmfld.gonggumi.Adapter.OfficialTabListAdapter;
+import com.example.vmfld.gonggumi.Adapter.TabViewPagerAdapter;
 import com.example.vmfld.gonggumi.ApiData.EnteredRoomData;
+import com.example.vmfld.gonggumi.ApiData.PublicInsertData;
 import com.example.vmfld.gonggumi.ApiData.PublicTabData;
 import com.example.vmfld.gonggumi.ApiData.PublicTabDetailData;
+import com.example.vmfld.gonggumi.Fragment.PublicTabFragment;
 import com.example.vmfld.gonggumi.R;
 import com.example.vmfld.gonggumi.database.UserDbHelper;
 import com.example.vmfld.gonggumi.database.UserIdContract;
 import com.example.vmfld.gonggumi.interfaces.EnteredRoomApi;
+import com.example.vmfld.gonggumi.interfaces.ManageMoneyApi;
 import com.example.vmfld.gonggumi.interfaces.PublicTabApi;
 
 import org.w3c.dom.Text;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -44,6 +58,7 @@ public class RoomActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, TabLayout.OnTabSelectedListener {
 
     public static final int REQUEST_CODE_FINISH = 1000;
+    public static final int REQUEST_MANAGE_FINISH = 2000;
 
     Integer[] ToolbarBackgrounds  = {R.drawable.roomt1, R.drawable.roomt2, R.drawable.roomt3, R.drawable.roomt4,
                                                                   R.drawable.roomt5, R.drawable.roomt6, R.drawable.roomt7, R.drawable.roomt8,};
@@ -52,11 +67,21 @@ public class RoomActivity extends AppCompatActivity
 
     Integer position = null;
     Integer roomid = null;
+    String flag = null;
     ViewPager viewPager;
     TabLayout tabLayout;
 
+    int check = 0;
+
     TextView txt_total_money;
 
+    List<PublicInsertData> publicInsertData = new ArrayList<>();
+    List<PublicTabDetailData> publicTabDetailData;
+
+    ListView listViewPublicTab;
+
+    ContentValues contentValues = new ContentValues();
+    private Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +95,9 @@ public class RoomActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(RoomActivity.this, ManageMoneyActivity.class);
+                intent.putExtra("roomid", roomid);
+                startActivityForResult(intent, REQUEST_MANAGE_FINISH);
             }
         });
 
@@ -85,12 +111,19 @@ public class RoomActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         viewPager = (ViewPager)findViewById(R.id.mViewpager_ID);
-        this.addPages();
 
-         tabLayout = (TabLayout)findViewById(R.id.mTab_ID);
-         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
-         tabLayout.setupWithViewPager(viewPager);
-         tabLayout.setOnTabSelectedListener(this);
+
+        PublicTabFragment publicTabFragment = new PublicTabFragment();
+
+        TabViewPagerAdapter pagerAdapter=new TabViewPagerAdapter(this.getSupportFragmentManager());
+        pagerAdapter.addFragment(publicTabFragment);
+        // pagerAdapter.addFragment(new PersonalMFragment());
+
+        //SET ADAPTER TO VP
+        //viewPager.setAdapter(pagerAdapter);
+
+
+
 
 
          /** toolbar 배경 설정**/
@@ -121,10 +154,38 @@ public class RoomActivity extends AppCompatActivity
 
         if(cursor != null && cursor.move(position+1)){
             roomid = cursor.getInt(cursor.getColumnIndexOrThrow(UserIdContract.RoomDataEntry.COLUMN_NAME_ROOM_ID));
+            flag = cursor.getString(cursor.getColumnIndexOrThrow(UserIdContract.RoomDataEntry.COLUMN_NAME_FLAG));
         }
 
         // Room 아이디 제대로 들어왔는지 확인
-        Log.e("RA_Room 아이디 : ", roomid+"");
+        Log.e("RA_Room 아이디 : ", roomid+"// 플래그 :" +flag+"");
+
+
+        if(flag.equals("R")){
+            fab.hide();
+        }
+
+        /** 데이터 베이스에 roomid 저장하기 **/
+
+        contentValues.put(UserIdContract.RoomIdEntry.COLUMN_NAME_ROOM_ID,  roomid);
+        SQLiteDatabase db = UserDbHelper.getsInstance(activity).getWritableDatabase();
+
+        db.delete(UserIdContract.RoomIdEntry.TABLE_NAME, null, null);
+
+        long newRoomid = db.insert(UserIdContract.RoomIdEntry.TABLE_NAME,
+                    null,
+                      contentValues);
+
+        Log.e("newRoomid : " , newRoomid+"");
+        if (newRoomid == -1) {
+            //Toast.makeText(activity, "저장에 문제가 발생하였습니다", Toast.LENGTH_SHORT).show();
+            Log.e("저장에 문제가 발생하였습니다 : ", "");
+        } else {
+            //Toast.makeText(activity, "UserId 저장되었습니다", Toast.LENGTH_SHORT).show();
+            Log.e("UserId 저장되었습니다 : ", "");
+        }
+
+
 
 
         /**Navigation view Header 내용 변경**/
@@ -137,14 +198,17 @@ public class RoomActivity extends AppCompatActivity
         TextView txt_nav_roomid = (TextView) nav_header_view.findViewById(R.id.txt_nav_roomid);
         txt_nav_roomid.setText("No."+roomid);
 
+
         /**Retrofit 통신하기**/
+        //iew rootView = inflater.inflate(R.layout.offical_m_fragment, container, false );
+        listViewPublicTab = (ListView)findViewById(R.id.officialMListView) ;
 
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(PublicTabApi.PublicTabURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
-        PublicTabApi publicTabApi  = retrofit.create(PublicTabApi.class);
+        final PublicTabApi publicTabApi  = retrofit.create(PublicTabApi.class);
 
         Call<PublicTabData> call =  publicTabApi.postRoomid(roomid);
 
@@ -152,7 +216,7 @@ public class RoomActivity extends AppCompatActivity
             @Override
             public void onResponse(Call<PublicTabData> call, Response<PublicTabData> response) {
                 PublicTabData publicTabData = response.body();
-                List<PublicTabDetailData> publicTabDetailData = response.body().detail;
+                publicTabDetailData = response.body().detail;
 
                 Log.e("RA_통신 값 :", response.code() + "");
                // Log.e("RA_잘 들어왔나 확인 : ", publicTabDetailData.get().getMemo() + "");
@@ -162,17 +226,122 @@ public class RoomActivity extends AppCompatActivity
 
                 txt_total_money = (TextView)findViewById(R.id.txt_total_money);
                 String temp_total =  decimalFormat.format(Double.parseDouble(nowTotal.toString().replaceAll(",","")));
-                Log.e("txt_total_money 값", txt_total_money+"");
                 txt_total_money.setText(temp_total+"원");
 
+                /**Adapter에 들어갈 리스트 재정립 **/
+                 /*
+                 int temp  = 0;
 
+                Log.e("사이즈값 : " , publicTabDetailData.size()+"");
+                if(!publicTabDetailData.isEmpty()){
+                    for(int i = 0; i < publicTabDetailData.size(); i++ ){
+
+                        if(i!=0 && publicTabDetailData.get(i).getDate().equals(publicTabDetailData.get(i-1).getDate())){
+                            check ++;
+
+                            if(check == 2){
+                                publicInsertData.get(temp).setMemo2(publicTabDetailData.get(i).getMemo());
+                                publicInsertData.get(temp).setPrice2(-1 *publicTabDetailData.get(i).getUsageprice());
+
+                                Log.e("현재  값2:  ", publicTabDetailData.get(i).getDate()+"//"+publicTabDetailData.get(i).getMemo()+"//"+publicTabDetailData.get(i).getUsageprice()+"//");
+                                Log.d("Insert 리스트 확인1  : ", publicInsertData.get(temp).getDate()+"//"+publicInsertData.get(temp).getMemo1()+"//"
+                                        +publicInsertData.get(temp).getPrice1()+"//"+publicInsertData.get(temp).getMemo2()+"//"+publicInsertData.get(temp).getPrice2()+"//");
+
+                                temp ++;
+                            }
+                            else{
+                                check = 0;
+                                Log.e("현재  값3 :  ", publicTabDetailData.get(i).getDate()+"//"+publicTabDetailData.get(i).getMemo()+"//"+publicTabDetailData.get(i).getUsageprice()+"//");
+                            }
+                        }
+                        else if(i==0 || !publicTabDetailData.get(i).getDate().equals(publicTabDetailData.get(i-1).getDate())){
+                            check ++;
+                            Log.e("현재  값1 :  ", publicTabDetailData.get(i).getDate()+"//"+publicTabDetailData.get(i).getMemo()+"//"+publicTabDetailData.get(i).getUsageprice()+"//");
+
+                            PublicInsertData tempData = new PublicInsertData();
+                            tempData.setDate(publicTabDetailData.get(i).getDate());
+                            tempData.setMemo1(publicTabDetailData.get(i).getMemo());
+                            tempData.setPrice1(-1 *publicTabDetailData.get(i).getUsageprice());
+                            tempData.setMemo2(null);
+                            tempData.setPrice2(null);
+
+                            publicInsertData.add(temp, tempData);
+
+                            Log.d("Insert 리스트 확인2  : ", publicInsertData.get(temp).getDate()+"//"+publicInsertData.get(temp).getMemo1()+"//"
+                            +publicInsertData.get(temp).getPrice1()+"//"+publicInsertData.get(temp).getMemo2()+"//"+publicInsertData.get(temp).getPrice2()+"//");
+                        }
+                    }
+
+                }
+                else{
+                    Log.e("Error : ","publicTabDetailData 비어있음");
+                }
+
+                */
+               // listViewPublicTab.setAdapter(new OfficialTabListAdapter(getApplicationContext(), publicInsertData));
             }
 
             @Override
             public void onFailure(Call<PublicTabData> call, Throwable t) {
-
+                Log.e("에러 발생 : ", t.getMessage());
             }
         });
+
+        //this.addPages();
+
+        tabLayout = (TabLayout)findViewById(R.id.mTab_ID);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setupWithViewPager(viewPager);
+        tabLayout.setOnTabSelectedListener(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if( requestCode == REQUEST_CODE_FINISH  &&  resultCode == RESULT_OK){
+
+            setResult(RESULT_OK);
+            finish();
+        }else{
+            /**Retrofit 통신하기**/
+            //iew rootView = inflater.inflate(R.layout.offical_m_fragment, container, false );
+            listViewPublicTab = (ListView)findViewById(R.id.officialMListView) ;
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(PublicTabApi.PublicTabURL)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            final PublicTabApi publicTabApi  = retrofit.create(PublicTabApi.class);
+
+            Call<PublicTabData> call =  publicTabApi.postRoomid(roomid);
+
+            call.enqueue(new Callback<PublicTabData>() {
+                @Override
+                public void onResponse(Call<PublicTabData> call, Response<PublicTabData> response) {
+                    PublicTabData publicTabData = response.body();
+                    publicTabDetailData = response.body().detail;
+
+                    Log.e("RA_통신 값 :", response.code() + "");
+                    // Log.e("RA_잘 들어왔나 확인 : ", publicTabDetailData.get().getMemo() + "");
+
+                    Integer nowTotal = publicTabData.getPublicMoneyprice();
+                    Log.e("RA_총금액 : ",  nowTotal+"");
+
+                    txt_total_money = (TextView)findViewById(R.id.txt_total_money);
+                    String temp_total =  decimalFormat.format(Double.parseDouble(nowTotal.toString().replaceAll(",","")));
+                    txt_total_money.setText(temp_total+"원");
+
+
+                }
+
+                @Override
+                public void onFailure(Call<PublicTabData> call, Throwable t) {
+                    Log.e("에러 발생 : ", t.getMessage());
+                }
+            });
+
+        }
     }
 
     @Override
@@ -218,7 +387,9 @@ public class RoomActivity extends AppCompatActivity
         if (id == R.id.nav_divideMoney) {
             // Handle the camera action
         } else if (id == R.id.nav_history) {
-
+            Intent intent = new Intent(RoomActivity.this, HistoryActivity.class);
+            intent.putExtra("roomid", roomid);
+            startActivityForResult(intent, REQUEST_CODE_FINISH);
         } else if (id == R.id.nav_gallery) {
 
         } else if (id == R.id.nav_getSC) {
@@ -236,12 +407,12 @@ public class RoomActivity extends AppCompatActivity
 
     private void addPages()
     {
-        //MyPagerAdapter pagerAdapter=new MyPagerAdapter(this.getSupportFragmentManager());
-        //pagerAdapter.addFragment(new OfficialMFragment());
-        //pagerAdapter.addFragment(new PersonalMFragment());
+        TabViewPagerAdapter pagerAdapter=new TabViewPagerAdapter(this.getSupportFragmentManager());
+        pagerAdapter.addFragment(new PublicTabFragment());
+       // pagerAdapter.addFragment(new PersonalMFragment());
 
         //SET ADAPTER TO VP
-        //viewPager.setAdapter(pagerAdapter);
+        viewPager.setAdapter(pagerAdapter);
     }
 
     @Override
@@ -258,4 +429,99 @@ public class RoomActivity extends AppCompatActivity
     public void onTabReselected(TabLayout.Tab tab) {
 
     }
+
+
+    public List<PublicInsertData> getPublicInsertData(){
+
+        //List<PublicInsertData> publicInsertData = new ArrayList<>();
+
+        //UserDbHelper userDbHelper = UserDbHelper.getsInstance(this);
+
+
+        /**Retrofit 통신하기**/
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(PublicTabApi.PublicTabURL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        final PublicTabApi publicTabApi  = retrofit.create(PublicTabApi.class);
+
+        Call<PublicTabData> call =  publicTabApi.postRoomid(roomid);
+
+        call.enqueue(new Callback<PublicTabData>() {
+            @Override
+            public void onResponse(Call<PublicTabData> call, Response<PublicTabData> response) {
+                PublicTabData publicTabData = response.body();
+                publicTabDetailData = response.body().detail;
+
+                Log.e("RA_통신 값 :", response.code() + "");
+                // Log.e("RA_잘 들어왔나 확인 : ", publicTabDetailData.get().getMemo() + "");
+
+                Integer nowTotal = publicTabData.getPublicMoneyprice();
+                Log.e("RA_총금액 : ",  nowTotal+"");
+
+
+                /**Adapter에 들어갈 리스트 재정립 **/
+                int temp  = 0;
+
+                Log.e("사이즈값 : " , publicTabDetailData.size()+"");
+                if(!publicTabDetailData.isEmpty()){
+                    for(int i = 0; i < publicTabDetailData.size(); i++ ){
+
+                        if(i!=0 && publicTabDetailData.get(i).getDate().equals(publicTabDetailData.get(i-1).getDate())){
+                            check ++;
+
+                            if(check == 2){
+                                publicInsertData.get(temp).setMemo2(publicTabDetailData.get(i).getMemo());
+                                publicInsertData.get(temp).setPrice2(-1 *publicTabDetailData.get(i).getUsageprice());
+
+                                Log.e("현재  값2:  ", publicTabDetailData.get(i).getDate()+"//"+publicTabDetailData.get(i).getMemo()+"//"+publicTabDetailData.get(i).getUsageprice()+"//");
+                                Log.d("Insert 리스트 확인1  : ", publicInsertData.get(temp).getDate()+"//"+publicInsertData.get(temp).getMemo1()+"//"
+                                        +publicInsertData.get(temp).getPrice1()+"//"+publicInsertData.get(temp).getMemo2()+"//"+publicInsertData.get(temp).getPrice2()+"//");
+
+                                temp ++;
+                            }
+                            else{
+                                check = 0;
+                                Log.e("현재  값3 :  ", publicTabDetailData.get(i).getDate()+"//"+publicTabDetailData.get(i).getMemo()+"//"+publicTabDetailData.get(i).getUsageprice()+"//");
+                            }
+                        }
+                        else if(i==0 || !publicTabDetailData.get(i).getDate().equals(publicTabDetailData.get(i-1).getDate())){
+                            check ++;
+                            Log.e("현재  값1 :  ", publicTabDetailData.get(i).getDate()+"//"+publicTabDetailData.get(i).getMemo()+"//"+publicTabDetailData.get(i).getUsageprice()+"//");
+
+                            PublicInsertData tempData = new PublicInsertData();
+                            tempData.setDate(publicTabDetailData.get(i).getDate());
+                            tempData.setMemo1(publicTabDetailData.get(i).getMemo());
+                            tempData.setPrice1(-1 *publicTabDetailData.get(i).getUsageprice());
+                            tempData.setMemo2(null);
+                            tempData.setPrice2(null);
+
+                            publicInsertData.add(temp, tempData);
+
+                            Log.d("Insert 리스트 확인2  : ", publicInsertData.get(temp).getDate()+"//"+publicInsertData.get(temp).getMemo1()+"//"
+                                    +publicInsertData.get(temp).getPrice1()+"//"+publicInsertData.get(temp).getMemo2()+"//"+publicInsertData.get(temp).getPrice2()+"//");
+                        }
+                    }
+
+                }
+                else{
+                    Log.e("Error : ","publicTabDetailData 비어있음");
+                }
+
+
+                // listViewPublicTab.setAdapter(new OfficialTabListAdapter(getApplicationContext(), publicInsertData));
+            }
+
+            @Override
+            public void onFailure(Call<PublicTabData> call, Throwable t) {
+                Log.e("에러 발생 : ", t.getMessage());
+            }
+        });
+
+
+        return publicInsertData;
+    }
 }
+

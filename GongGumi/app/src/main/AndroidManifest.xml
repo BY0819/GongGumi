@@ -42,9 +42,18 @@
         <activity
             android:name=".Activity.RoomActivity"
             android:label="@string/title_activity_room"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.CodeGetActivity"
+            android:theme="@style/AppTheme.Pop" />
+        <activity
+            android:name=".Activity.ManageMoneyActivity"
+            android:label="@string/title_activity_manage_money"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.HistoryActivity"
+            android:label="@string/title_activity_history"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Activity.CodeGetActivity"
-            android:theme="@style/AppTheme.Pop"/>
     </application>
 
 </manifest>

@@ -24,6 +24,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
@@ -79,7 +80,6 @@ public class MainListActivity extends AppCompatActivity  {
     private ListView listViewEnteredRoom;
     private Activity activity;
     private ImageView background_image;
-
 
 
     @Override
@@ -423,6 +423,7 @@ public class MainListActivity extends AppCompatActivity  {
                     Log.e("잘 들어왔나 확인 : ", enteredRoomListClassData.get(0).getRegdate() + "//"+response.body().getData().get(0).getName()+"");
                     background_image.setVisibility(View.GONE);
                     listViewEnteredRoom.setAdapter(new EnteredRoomListAdapter(getApplicationContext(), enteredRoomListClassData));
+
 
                 }
 

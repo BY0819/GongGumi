@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#3252f4</color> <!-- 상태바 색상 -->
     <color name="colorAccent">#22418f</color> <!-- fab 아이템 색상 -->
     <color name="colorWhite">#ffffff</color> <!-- 흰색  색상 -->
+    <color name="colorGray">#a4a4a4</color> <!--회색 색상 -->
 </resources>

@@ -47,7 +47,7 @@ public class MakeRoomActivity extends AppCompatActivity {
     public static final int REQUEST_CODE_FINISH = 1000;
 
    // Button btn_add_mem = (Button)findViewById(R.id.btn_add_mem);
-    //Button btn_sub_mem = (Button)findViewById(R.id.btn_sub_mem);
+   //Button btn_sub_mem = (Button)findViewById(R.id.btn_sub_mem);
    private DecimalFormat decimalFormat = new DecimalFormat("#,###");
    private String result="";
 

@@ -30,6 +30,7 @@
         android:layout_marginEnd="76dp"
         android:layout_marginRight="76dp"
         android:text="1234"
+        android:visibility="gone"
         android:textColor="@color/design_default_color_primary"
         android:textSize="24sp"
         android:textStyle="bold"
