@@ -3,7 +3,7 @@ package com.example.vmfld.gonggumi.ApiData;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class MakeRoomData {
+public class  MakeRoomData {
     @SerializedName("result")
     @Expose
     private String result;
