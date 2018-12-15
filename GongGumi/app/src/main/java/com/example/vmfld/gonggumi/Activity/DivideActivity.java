@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -39,12 +40,7 @@ public class DivideActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayShowTitleEnabled(false); // Remove Real Title
 
 
-        Retrofit divideretrofit = new Retrofit.Builder()
-                .baseUrl(DivideApi.DivideUrl)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
-        final DivideApi divideApi = divideretrofit.create(DivideApi.class);
+        /**roomid**/
 
         if(getIntent() != null){
             position = getIntent().getIntExtra("position",0);
@@ -62,6 +58,16 @@ public class DivideActivity extends AppCompatActivity {
         }
 
         Log.e("roomid is :", Roomid+"");
+
+        /**
+         * retrofit
+         **/
+        Retrofit divideretrofit = new Retrofit.Builder()
+                .baseUrl(DivideApi.DivideUrl)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        final DivideApi divideApi = divideretrofit.create(DivideApi.class);
 
         Call<DivideData> call = divideApi.getDivideData(Roomid);
         call.enqueue(new Callback<DivideData>() {
@@ -96,5 +102,17 @@ public class DivideActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        int id = item.getItemId();
+
+        if(id == android.R.id.home){
+            this.finish();
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 }
