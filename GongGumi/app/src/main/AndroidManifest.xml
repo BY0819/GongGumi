@@ -54,7 +54,8 @@
             android:name=".Activity.HistoryActivity"
             android:label="@string/title_activity_history"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".Activity.DivideActivity"></activity>
+        <activity android:name=".Activity.DivideActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
