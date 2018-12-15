@@ -42,12 +42,13 @@ public class DivideActivity extends AppCompatActivity {
 
 
         /**roomid**/
-
+/**
         if(getIntent() != null){
             position = getIntent().getIntExtra("position",0);
 
             Log.e("Room에서 넘어온 position : ",position+"");
         }
+
         final UserDbHelper userDbHelper = UserDbHelper.getsInstance(DivideActivity.this);
 
         Cursor cursor = userDbHelper.getReadableDatabase()
@@ -59,7 +60,7 @@ public class DivideActivity extends AppCompatActivity {
         }
 
         Log.e("roomid is :", Roomid+"");
-
+**/
         /**
          * retrofit
          **/
@@ -69,6 +70,9 @@ public class DivideActivity extends AppCompatActivity {
                 .build();
 
         final DivideApi divideApi = divideretrofit.create(DivideApi.class);
+
+        /**roomid 임의 설정 **/
+        Roomid = 1;
 
         Call<DivideData> call = divideApi.getDivideData(Roomid);
         call.enqueue(new Callback<DivideData>() {
