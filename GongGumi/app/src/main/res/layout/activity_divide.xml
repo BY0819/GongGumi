@@ -110,7 +110,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@drawable/divide_background"/>
+            android:background="@drawable/divide_bg"/>
 
         <ListView
             android:id="@+id/divideListView"
@@ -122,7 +122,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@drawable/divide_background"
+            android:background="@drawable/divide_bg"
             android:layout_marginBottom="10dp"/>
     </LinearLayout>
 

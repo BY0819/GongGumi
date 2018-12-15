@@ -25,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class DivideActivity extends AppCompatActivity {
     private ListView DivideDataListView;
     private int Roomid;
-    int position;
+    Integer position = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,7 +36,8 @@ public class DivideActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true); // Create BackButton
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);// Create BackButton
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayShowTitleEnabled(false); // Remove Real Title
 
 
